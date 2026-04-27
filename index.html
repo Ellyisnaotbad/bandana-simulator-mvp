@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Bandana Simulator MVP</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    button, input { margin: 5px; padding: 10px; }
+    #canvasWrapper { position: relative; width: 800px; height: 950px; margin: auto; }
+    #border, #inner-design { position: absolute; top: 0; left: 0; }
+    #caption { position: absolute; top: 800px; left: 0; width: 800px; height: 150px; background: white; }
+    #color-chip { width:40px; height:40px; display:inline-block; vertical-align:middle; }
+  </style>
+</head>
+<body>
+  <h1>Bandana Simulator</h1>
+
+  <!-- 내부 디자인 선택 -->
+  <button onclick="setInner('option1')">내부 디자인 1</button>
+  <button onclick="setInner('option2')">내부 디자인 2</button>
+
+  <!-- 테두리 선택 -->
+  <div>
+    <button onclick="setBorder('border1')">테두리 1</button>
+    <button onclick="setBorder('border2')">테두리 2</button>
+    <button onclick="setBorder('border3')">테두리 3</button>
+    <button onclick="setBorder('border4')">테두리 4</button>
+    <button onclick="setBorder('border5')">테두리 5</button>
+    <button onclick="setBorder('border6')">테두리 6</button>
+    <button onclick="setBorder('border7')">테두리 7</button>
+  </div>
+
+  <!-- 컬러피커 -->
+  <div>
+    <label for="colorPicker">색상 선택:</label>
+    <input type="color" id="colorPicker" value="#FF0000" onchange="setColor(this.value)">
+  </div>
+
+  <button onclick="saveImage()">PNG 저장</button>
+
+  <!-- 시뮬레이터 영역 -->
+  <div id="canvasWrapper">
+    <img id="border" src="https://drive.google.com/uc?export=view&id=14UG_R2YpReJlwJr24kcfcVgjBpqpIxzg" width="800" height="800">
+    <img id="inner-design" src="https://drive.google.com/uc?export=view&id=1larT02H_KF8bzZO5TmgR9HJtIHdJoihY" width="800" height="800">
+    <div id="caption">
+      <p id="color-info">
