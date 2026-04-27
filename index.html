@@ -13,16 +13,29 @@
                               margin: auto;
                               background-color: #FFFFFF;
                 }
-                #border-container, #inner-container {
+                #border-container {
                               position: absolute;
                               top: 0;
                               left: 0;
                               width: 100%;
                               height: 800px;
                 }
-                #border-container img, #inner-container img {
+                #border-container img {
                               width: 100%;
                               height: 100%;
+                }
+                #inner-container {
+                              position: absolute;
+                              top: 100px;
+                              left: 100px;
+                              width: 600px;
+                              height: 600px;
+                              overflow: hidden;
+                }
+                #inner-container img {
+                              width: 100%;
+                              height: 100%;
+                              object-fit: cover;
                 }
                 #caption {
                               position: absolute;
@@ -54,47 +67,49 @@
                 <button onclick="setBorder('border7')">테두리 7</button>button>
       </div>
 
-        <!-- 색상 컬러피커 버튼 3개 -->
+        <!-- 색상 컬러피커 버튼 -->
         <div>
-                  <button onclick="document.getElementById('innerColorPicker').click()">Inner 컬러피커</button>button>
+                  <button onclick="document.getElementById('innerColorPicker').click()">Inner 색상</button>button>
                   <input type="color" id="innerColorPicker" value="#000000" style="display:none;" onchange="setInnerColor(this.value)">
-                  <button onclick="document.getElementById('borderColorPicker').click()">Border 컬러피커</button>button>
+                  <button onclick="document.getElementById('borderColorPicker').click()">Border 색상</button>button>
                   <input type="color" id="borderColorPicker" value="#000000" style="display:none;" onchange="setBorderColor(this.value)">
-                  <button onclick="document.getElementById('bgColorPicker').click()">배경 컬러피커</button>button>
+                  <button onclick="document.getElementById('bgColorPicker').click()">배경 색상</button>button>
                   <input type="color" id="bgColorPicker" value="#FFFFFF" style="display:none;" onchange="setBackground(this.value)">
         </div>
 
         <!-- 시뮬레이터 영역 -->
         <div id="canvasWrapper">
-                  <!-- 테두리 이미지 컨테이너 -->
+                  <!-- 테두리 이미지 -->
                   <div id="border-container">
-                                <img id="border-img" src="images/border1.svg" alt="Border" onerror="handleImageError(this, 'border')">
+                                <img id="border-img" src="images/border1.svg" alt="Border" onerror="handleImageError(this, 'border')" style="filter: drop-shadow(0 0 0px rgba(0,0,0,0));">
                   </div>
-                  <!-- 내부 디자인 이미지 컨테이너 -->
+                  <!-- 내부 디자인 이미지 -->
                   <div id="inner-container">
-                                <img id="inner-img" src="images/inner1.svg" alt="Inner Design" onerror="handleImageError(this, 'inner')">
+                                <img id="inner-img" src="images/inner1.svg" alt="Inner Design" onerror="handleImageError(this, 'inner')" style="filter: drop-shadow(0 0 0px rgba(0,0,0,0));">
                   </div>
                   <!-- 캡션 -->
                   <div id="caption">
                                 <p id="color-info">Inner:#000000 | Border:#000000 | Background:#FFFFFF</p>p>
                                 <div id="color-chip" style="background:#000000;"></div>
-                                <p id="version-info">Version 2 | 2026-04-27</p>p>
+                                <p id="version-info">Version 3 | 2026-04-27</p>p>
                   </div>
         </div>
 
-        <!-- PNG 저장 버튼 (하단) -->
+        <!-- PNG 저장 버튼 -->
         <button id="saveBtn" onclick="saveImage()">PNG 저장</button>button>
 
         <script>
-                  // 현재 선택된 이미지 파일
                   let currentBorder = 'border1';
                   let currentInner = 'inner1';
+                  let innerColorValue = '#000000';
+                  let borderColorValue = '#000000';
 
                   function setInner(option) {
                                 currentInner = option;
                                 const innerImg = document.getElementById('inner-img');
                                 const path = 'images/' + option + '.svg';
                                 innerImg.src = path;
+                                applyColorFilters();
                   }
 
                   function setBorder(option) {
@@ -102,19 +117,20 @@
                                 const borderImg = document.getElementById('border-img');
                                 const path = 'images/' + option + '.svg';
                                 borderImg.src = path;
+                                applyColorFilters();
                   }
 
                   function setInnerColor(hex) {
-                                // SVG 이미지의 색상 변경 - CORS 정책으로 인해 직접 변경 불가능
-                                // 필터를 통한 색상 적용
-                                const innerContainer = document.getElementById('inner-container');
-                                applyColorFilter(innerContainer, hex);
+                                innerColorValue = hex;
+                                document.getElementById('innerColorPicker').value = hex;
+                                applyColorFilters();
                                 updateCaption();
                   }
 
                   function setBorderColor(hex) {
-                                const borderContainer = document.getElementById('border-container');
-                                applyColorFilter(borderContainer, hex);
+                                borderColorValue = hex;
+                                document.getElementById('borderColorPicker').value = hex;
+                                applyColorFilters();
                                 updateCaption();
                   }
 
@@ -123,13 +139,57 @@
                                 updateCaption();
                   }
 
-                  function applyColorFilter(element, hex) {
-                                // CSS 필터를 사용하여 색상 조정
-                                const img = element.querySelector('img');
-                                if (img) {
-                                                  // 간단한 색상 변환을 위해 filter 속성 사용
-                                                  img.style.filter = 'brightness(0.9)';
+                  function applyColorFilters() {
+                                // SVG 이미지의 색상을 변경하기 위해 CSS 필터를 사용
+                                const innerImg = document.getElementById('inner-img');
+                                const borderImg = document.getElementById('border-img');
+
+                                // 색상값을 RGB로 변환
+                                const innerRGB = hexToRgb(innerColorValue);
+                                const borderRGB = hexToRgb(borderColorValue);
+
+                                // 색상 변경을 위한 SVG 필터 적용
+                                if (innerImg && innerRGB) {
+                                                  const innerHSL = rgbToHsl(innerRGB.r, innerRGB.g, innerRGB.b);
+                                                  innerImg.style.filter = `hue-rotate(${innerHSL.h}deg) saturate(1.5) brightness(1)`;
                                 }
+
+                                if (borderImg && borderRGB) {
+                                                  const borderHSL = rgbToHsl(borderRGB.r, borderRGB.g, borderRGB.b);
+                                                  borderImg.style.filter = `hue-rotate(${borderHSL.h}deg) saturate(1.5) brightness(1)`;
+                                }
+                  }
+
+                  function hexToRgb(hex) {
+                                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                                return result ? {
+                                                  r: parseInt(result[1], 16),
+                                                  g: parseInt(result[2], 16),
+                                                  b: parseInt(result[3], 16)
+                                } : null;
+                  }
+
+                  function rgbToHsl(r, g, b) {
+                                r /= 255;
+                                g /= 255;
+                                b /= 255;
+                                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                                let h, s, l = (max + min) / 2;
+
+                                if(max === min){
+                                                  h = s = 0;
+                                } else {
+                                                  const d = max - min;
+                                                  s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                                                  switch(max){
+                                                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                                                    case g: h = (b - r) / d + 2; break;
+                                                    case b: h = (r - g) / d + 4; break;
+                                                  }
+                                                  h /= 6;
+                                }
+
+                                return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
                   }
 
                   function updateCaption() {
@@ -143,17 +203,16 @@
 
                   function handleImageError(img, type) {
                                 console.error(`Failed to load ${type} image:`, img.src);
-                                // 이미지 로드 실패 시 대체 텍스트 표시
                                 img.style.display = 'none';
                                 img.parentElement.style.backgroundColor = '#f0f0f0';
                                 img.parentElement.innerHTML = `<p style="padding-top: 300px; color: red;">Failed to load ${type} image</p>`;
                   }
 
                   function saveImage() {
-                                alert('PNG 저장 기능은 canvas-based SVG 렌더링이 필요합니다.\n현재 버전에서는 브라우저의 스크린샷 기능을 사용해주세요.');
+                                alert('PNG 저장 기능은 canvas-based SVG 렌더링이 필요합니다.\\n현재 버전에서는 브라우저의 스크린샷 기능을 사용해주세요.');
                   }
 
-                  // 페이지 로드 시 기본값 설정
+                  // 페이지 로드 시 초기화
                   window.addEventListener('DOMContentLoaded', function() {
                                 updateCaption();
                   });
