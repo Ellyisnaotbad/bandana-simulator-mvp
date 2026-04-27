@@ -14,8 +14,16 @@
       background-color: #FFFFFF; /* 기본 배경색 */
     }
     svg { position: absolute; top: 0; left: 0; }
+    #inner-design { 
+      width: 600px; 
+      height: 600px; 
+      top: 100px; 
+      left: 100px; 
+      position: absolute; 
+    }
     #caption { position: absolute; top: 800px; left: 0; width: 800px; height: 150px; background: white; }
     #color-chip { width:40px; height:40px; display:inline-block; vertical-align:middle; }
+    #saveBtn { margin-top: 30px; padding: 12px 20px; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -36,57 +44,53 @@
     <button onclick="setBorder('border7')">테두리 7</button>
   </div>
 
-  <!-- 색상 선택 -->
+  <!-- 색상 컬러피커 버튼 3개 -->
   <div>
-    <label for="lineColorPicker">라인 색상:</label>
-    <input type="color" id="lineColorPicker" value="#000000" onchange="setLineColor(this.value)">
-    
-    <label for="borderColorPicker">테두리 색상:</label>
-    <input type="color" id="borderColorPicker" value="#000000" onchange="setBorderColor(this.value)">
-    
-    <label for="bgColorPicker">배경색:</label>
-    <input type="color" id="bgColorPicker" value="#FFFFFF" onchange="setBackground(this.value)">
-  </div>
+    <button onclick="document.getElementById('innerColorPicker').click()">Inner 컬러피커</button>
+    <input type="color" id="innerColorPicker" value="#000000" style="display:none;" onchange="setInnerColor(this.value)">
 
-  <button onclick="saveImage()">PNG 저장</button>
+    <button onclick="document.getElementById('borderColorPicker').click()">Border 컬러피커</button>
+    <input type="color" id="borderColorPicker" value="#000000" style="display:none;" onchange="setBorderColor(this.value)">
+
+    <button onclick="document.getElementById('bgColorPicker').click()">배경 컬러피커</button>
+    <input type="color" id="bgColorPicker" value="#FFFFFF" style="display:none;" onchange="setBackground(this.value)">
+  </div>
 
   <!-- 시뮬레이터 영역 -->
   <div id="canvasWrapper">
     <!-- 테두리 SVG -->
     <svg id="border" width="800" height="800" viewBox="0 0 800 800">
-      <!-- border.svg 내용 붙여넣기 -->
       <path d="M10,10 L790,10 L790,790 L10,790 Z" stroke="black" fill="none" stroke-width="10"/>
     </svg>
 
     <!-- 내부 디자인 SVG -->
-    <svg id="inner-design" width="600" height="600" viewBox="0 0 700 700" style="top:50px; left:50px;">
-      <!-- inner.svg 내용 붙여넣기 -->
+    <svg id="inner-design" viewBox="0 0 800 800">
       <circle cx="400" cy="400" r="200" stroke="black" fill="none" stroke-width="5"/>
     </svg>
 
     <!-- 캡션 -->
     <div id="caption">
-      <p id="color-info">라인:#000000 | 테두리:#000000 | 배경:#FFFFFF</p>
+      <p id="color-info">Inner:#000000 | Border:#000000 | Background:#FFFFFF</p>
       <div id="color-chip" style="background:#000000;"></div>
       <p id="version-info">Version 1 | 2026-04-27</p>
     </div>
   </div>
 
+  <!-- PNG 저장 버튼 (하단) -->
+  <button id="saveBtn" onclick="saveImage()">PNG 저장</button>
+
   <script>
     function setInner(option) {
-      // 실제 inner1.svg, inner2.svg 내용을 불러와서 inner-design에 교체하는 로직 필요
-      // 여기서는 예시로 circle만 표시
       const inner = document.getElementById("inner-design");
       if(option === "inner1") {
         inner.innerHTML = '<circle cx="400" cy="400" r="200" stroke="black" fill="none" stroke-width="5"/>';
       } else {
-        inner.innerHTML = '<rect x="200" y="200" width="400" height="400" stroke="black" fill="none" stroke-width="5"/>';
+        inner.innerHTML = '<rect x="250" y="250" width="300" height="300" stroke="black" fill="none" stroke-width="5"/>';
       }
     }
 
     function setBorder(option) {
       const border = document.getElementById("border");
-      // border1~7.svg 내용을 각각 불러와서 교체
       if(option === "border1") {
         border.innerHTML = '<path d="M10,10 L790,10 L790,790 L10,790 Z" stroke="black" fill="none" stroke-width="10"/>';
       } else {
@@ -94,7 +98,7 @@
       }
     }
 
-    function setLineColor(hex) {
+    function setInnerColor(hex) {
       document.querySelectorAll("#inner-design *").forEach(el => el.setAttribute("stroke", hex));
       updateCaption();
     }
@@ -110,11 +114,11 @@
     }
 
     function updateCaption() {
-      const lineColor = document.querySelector("#inner-design *")?.getAttribute("stroke") || "#000000";
+      const innerColor = document.querySelector("#inner-design *")?.getAttribute("stroke") || "#000000";
       const borderColor = document.querySelector("#border *")?.getAttribute("stroke") || "#000000";
       const bgColor = document.getElementById("canvasWrapper").style.backgroundColor;
-      document.getElementById("color-info").textContent = `라인:${lineColor} | 테두리:${borderColor} | 배경:${bgColor}`;
-      document.getElementById("color-chip").style.background = lineColor;
+      document.getElementById("color-info").textContent = `Inner:${innerColor} | Border:${borderColor} | Background:${bgColor}`;
+      document.getElementById("color-chip").style.background = innerColor;
     }
 
     function saveImage() {
@@ -123,12 +127,9 @@
       canvas.height = 950;
       const ctx = canvas.getContext("2d");
 
-      // 배경색
       ctx.fillStyle = document.getElementById("canvasWrapper").style.backgroundColor;
       ctx.fillRect(0,0,800,950);
 
-      // SVG를 캔버스에 그리려면 추가 라이브러리 필요 (예: canvg)
-      // 여기서는 기본 구조만 제공
       ctx.fillStyle = "black";
       ctx.font = "16px Arial";
       ctx.fillText("SVG 저장은 canvg 같은 라이브러리 필요", 20, 920);
