@@ -40,8 +40,8 @@
 
   <!-- 시뮬레이터 영역 -->
   <div id="canvasWrapper">
-    <img id="border" src="images/border1.png" width="800" height="800">
-    <img id="inner-design" src="images/inner1.png" width="800" height="800">
+    <img id="border" src="images/border1.svg" width="800" height="800">
+    <img id="inner-design" src="images/inner1.svg" width="800" height="800">
     <div id="caption">
       <p id="color-info">#FF0000</p>
       <div id="color-chip" style="background:#FF0000;"></div>
@@ -53,8 +53,8 @@
     function setInner(option) {
       const inner = document.getElementById("inner-design");
       const urls = {
-        option1: "images/inner1.png",
-        option2: "images/inner2.png"
+        option1: "images/inner1.svg",
+        option2: "images/inner2.svg"
       };
       inner.src = urls[option];
     }
@@ -62,13 +62,13 @@
     function setBorder(option) {
       const border = document.getElementById("border");
       const urls = {
-        border1: "images/border1.png",
-        border2: "images/border2.png",
-        border3: "images/border3.png",
-        border4: "images/border4.png",
-        border5: "images/border5.png",
-        border6: "images/border6.png",
-        border7: "images/border7.png"
+        border1: "images/border1.svg",
+        border2: "images/border2.svg",
+        border3: "images/border3.svg",
+        border4: "images/border4.svg",
+        border5: "images/border5.svg",
+        border6: "images/border6.svg",
+        border7: "images/border7.svg"
       };
       border.src = urls[option];
     }
