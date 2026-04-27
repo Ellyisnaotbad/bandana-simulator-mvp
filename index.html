@@ -40,7 +40,76 @@
 
   <!-- 시뮬레이터 영역 -->
   <div id="canvasWrapper">
-    <img id="border" src="https://drive.google.com/uc?export=view&id=14UG_R2YpReJlwJr24kcfcVgjBpqpIxzg" width="800" height="800">
-    <img id="inner-design" src="https://drive.google.com/uc?export=view&id=1larT02H_KF8bzZO5TmgR9HJtIHdJoihY" width="800" height="800">
+    <img id="border" src="images/border1.png" width="800" height="800">
+    <img id="inner-design" src="images/inner1.png" width="800" height="800">
     <div id="caption">
-      <p id="color-info">
+      <p id="color-info">#FF0000</p>
+      <div id="color-chip" style="background:#FF0000;"></div>
+      <p id="version-info">Version 1 | 2026-04-27</p>
+    </div>
+  </div>
+
+  <script>
+    function setInner(option) {
+      const inner = document.getElementById("inner-design");
+      const urls = {
+        option1: "images/inner1.png",
+        option2: "images/inner2.png"
+      };
+      inner.src = urls[option];
+    }
+
+    function setBorder(option) {
+      const border = document.getElementById("border");
+      const urls = {
+        border1: "images/border1.png",
+        border2: "images/border2.png",
+        border3: "images/border3.png",
+        border4: "images/border4.png",
+        border5: "images/border5.png",
+        border6: "images/border6.png",
+        border7: "images/border7.png"
+      };
+      border.src = urls[option];
+    }
+
+    function setColor(hex) {
+      document.getElementById("color-chip").style.background = hex;
+      document.getElementById("color-info").textContent = hex;
+    }
+
+    function saveImage() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 800;
+      canvas.height = 950;
+      const ctx = canvas.getContext("2d");
+
+      const border = document.getElementById("border");
+      const inner = document.getElementById("inner-design");
+
+      // 이미지 그리기
+      ctx.drawImage(border, 0, 0, 800, 800);
+      ctx.drawImage(inner, 0, 0, 800, 800);
+
+      // 캡션 그리기
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 800, 800, 150);
+      ctx.fillStyle = "black";
+      ctx.font = "20px Arial";
+      ctx.fillText(document.getElementById("color-info").textContent, 20, 850);
+      ctx.fillStyle = document.getElementById("color-chip").style.background;
+      ctx.fillRect(300, 820, 40, 40);
+      ctx.fillStyle = "gray";
+      ctx.font = "16px Arial";
+      ctx.fillText(document.getElementById("version-info").textContent, 20, 890);
+
+      // 다운로드
+      const pngFile = canvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.download = "bandana.png";
+      downloadLink.href = pngFile;
+      downloadLink.click();
+    }
+  </script>
+</body>
+</html>
