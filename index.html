@@ -1,145 +1,168 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>Bandana Simulator MVP</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; }
-    button, input { margin: 5px; padding: 10px; }
-    #canvasWrapper { 
-      position: relative; 
-      width: 800px; 
-      height: 950px; 
-      margin: auto; 
-      background-color: #FFFFFF; /* 기본 배경색 */
-    }
-    svg { position: absolute; top: 0; left: 0; }
-    #inner-design { 
-      width: 600px; 
-      height: 600px; 
-      top: 100px; 
-      left: 100px; 
-      position: absolute; 
-    }
-    #caption { position: absolute; top: 800px; left: 0; width: 800px; height: 150px; background: white; }
-    #color-chip { width:40px; height:40px; display:inline-block; vertical-align:middle; }
-    #saveBtn { margin-top: 30px; padding: 12px 20px; font-weight: bold; }
-  </style>
-</head>
-<body>
-  <h1>Bandana Simulator</h1>
+  <head>
+        <meta charset="UTF-8">
+        <title>Bandana Simulator MVP</title>
+      <style>
+                body { font-family: Arial, sans-serif; text-align: center; }
+                button, input { margin: 5px; padding: 10px; }
+                #canvasWrapper {
+                              position: relative;
+                              width: 800px;
+                              height: 950px;
+                              margin: auto;
+                              background-color: #FFFFFF;
+                }
+                #border-container, #inner-container {
+                              position: absolute;
+                              top: 0;
+                              left: 0;
+                              width: 100%;
+                              height: 800px;
+                }
+                #border-container img, #inner-container img {
+                              width: 100%;
+                              height: 100%;
+                }
+                #caption {
+                              position: absolute;
+                              top: 800px;
+                              left: 0;
+                              width: 800px;
+                              height: 150px;
+                              background: white;
+                }
+                #color-chip { width:40px; height:40px; display:inline-block; vertical-align:middle; }
+                #saveBtn { margin-top: 30px; padding: 12px 20px; font-weight: bold; }
+            </style>
+  </head>
+  <body>
+        <h1>Bandana Simulator</h1>
+      
+      <!-- 내부 디자인 선택 -->
+      <button onclick="setInner('inner1')">내부 디자인 1</button>button>
+      <button onclick="setInner('inner2')">내부 디자인 2</button>button>
+      
+      <!-- 테두리 선택 -->
+      <div>
+                <button onclick="setBorder('border1')">테두리 1</button>button>
+                <button onclick="setBorder('border2')">테두리 2</button>button>
+                <button onclick="setBorder('border3')">테두리 3</button>button>
+                <button onclick="setBorder('border4')">테두리 4</button>button>
+                <button onclick="setBorder('border5')">테두리 5</button>button>
+                <button onclick="setBorder('border6')">테두리 6</button>button>
+                <button onclick="setBorder('border7')">테두리 7</button>button>
+      </div>
 
-  <!-- 내부 디자인 선택 -->
-  <button onclick="setInner('inner1')">내부 디자인 1</button>
-  <button onclick="setInner('inner2')">내부 디자인 2</button>
+        <!-- 색상 컬러피커 버튼 3개 -->
+        <div>
+                  <button onclick="document.getElementById('innerColorPicker').click()">Inner 컬러피커</button>button>
+                  <input type="color" id="innerColorPicker" value="#000000" style="display:none;" onchange="setInnerColor(this.value)">
+                  <button onclick="document.getElementById('borderColorPicker').click()">Border 컬러피커</button>button>
+                  <input type="color" id="borderColorPicker" value="#000000" style="display:none;" onchange="setBorderColor(this.value)">
+                  <button onclick="document.getElementById('bgColorPicker').click()">배경 컬러피커</button>button>
+                  <input type="color" id="bgColorPicker" value="#FFFFFF" style="display:none;" onchange="setBackground(this.value)">
+        </div>
 
-  <!-- 테두리 선택 -->
-  <div>
-    <button onclick="setBorder('border1')">테두리 1</button>
-    <button onclick="setBorder('border2')">테두리 2</button>
-    <button onclick="setBorder('border3')">테두리 3</button>
-    <button onclick="setBorder('border4')">테두리 4</button>
-    <button onclick="setBorder('border5')">테두리 5</button>
-    <button onclick="setBorder('border6')">테두리 6</button>
-    <button onclick="setBorder('border7')">테두리 7</button>
-  </div>
+        <!-- 시뮬레이터 영역 -->
+        <div id="canvasWrapper">
+                  <!-- 테두리 이미지 컨테이너 -->
+                  <div id="border-container">
+                                <img id="border-img" src="images/border1.svg" alt="Border" onerror="handleImageError(this, 'border')">
+                  </div>
+                  <!-- 내부 디자인 이미지 컨테이너 -->
+                  <div id="inner-container">
+                                <img id="inner-img" src="images/inner1.svg" alt="Inner Design" onerror="handleImageError(this, 'inner')">
+                  </div>
+                  <!-- 캡션 -->
+                  <div id="caption">
+                                <p id="color-info">Inner:#000000 | Border:#000000 | Background:#FFFFFF</p>p>
+                                <div id="color-chip" style="background:#000000;"></div>
+                                <p id="version-info">Version 2 | 2026-04-27</p>p>
+                  </div>
+        </div>
 
-  <!-- 색상 컬러피커 버튼 3개 -->
-  <div>
-    <button onclick="document.getElementById('innerColorPicker').click()">Inner 컬러피커</button>
-    <input type="color" id="innerColorPicker" value="#000000" style="display:none;" onchange="setInnerColor(this.value)">
+        <!-- PNG 저장 버튼 (하단) -->
+        <button id="saveBtn" onclick="saveImage()">PNG 저장</button>button>
 
-    <button onclick="document.getElementById('borderColorPicker').click()">Border 컬러피커</button>
-    <input type="color" id="borderColorPicker" value="#000000" style="display:none;" onchange="setBorderColor(this.value)">
+        <script>
+                  // 현재 선택된 이미지 파일
+                  let currentBorder = 'border1';
+                  let currentInner = 'inner1';
 
-    <button onclick="document.getElementById('bgColorPicker').click()">배경 컬러피커</button>
-    <input type="color" id="bgColorPicker" value="#FFFFFF" style="display:none;" onchange="setBackground(this.value)">
-  </div>
+                  function setInner(option) {
+                                currentInner = option;
+                                const innerImg = document.getElementById('inner-img');
+                                const path = 'images/' + option + '.svg';
+                                innerImg.src = path;
+                  }
 
-  <!-- 시뮬레이터 영역 -->
-  <div id="canvasWrapper">
-    <!-- 테두리 SVG -->
-    <svg id="border" width="800" height="800" viewBox="0 0 800 800">
-      <path d="M10,10 L790,10 L790,790 L10,790 Z" stroke="black" fill="none" stroke-width="10"/>
-    </svg>
+                  function setBorder(option) {
+                                currentBorder = option;
+                                const borderImg = document.getElementById('border-img');
+                                const path = 'images/' + option + '.svg';
+                                borderImg.src = path;
+                  }
 
-    <!-- 내부 디자인 SVG -->
-    <svg id="inner-design" viewBox="0 0 800 800">
-      <circle cx="400" cy="400" r="200" stroke="black" fill="none" stroke-width="5"/>
-    </svg>
+                  function setInnerColor(hex) {
+                                // SVG 이미지의 색상 변경 - CORS 정책으로 인해 직접 변경 불가능
+                                // 필터를 통한 색상 적용
+                                const innerContainer = document.getElementById('inner-container');
+                                applyColorFilter(innerContainer, hex);
+                                updateCaption();
+                  }
 
-    <!-- 캡션 -->
-    <div id="caption">
-      <p id="color-info">Inner:#000000 | Border:#000000 | Background:#FFFFFF</p>
-      <div id="color-chip" style="background:#000000;"></div>
-      <p id="version-info">Version 1 | 2026-04-27</p>
-    </div>
-  </div>
+                  function setBorderColor(hex) {
+                                const borderContainer = document.getElementById('border-container');
+                                applyColorFilter(borderContainer, hex);
+                                updateCaption();
+                  }
 
-  <!-- PNG 저장 버튼 (하단) -->
-  <button id="saveBtn" onclick="saveImage()">PNG 저장</button>
+                  function setBackground(hex) {
+                                document.getElementById('canvasWrapper').style.backgroundColor = hex;
+                                updateCaption();
+                  }
 
-  <script>
-    function setInner(option) {
-      const inner = document.getElementById("inner-design");
-      if(option === "inner1") {
-        inner.innerHTML = '<circle cx="400" cy="400" r="200" stroke="black" fill="none" stroke-width="5"/>';
-      } else {
-        inner.innerHTML = '<rect x="250" y="250" width="300" height="300" stroke="black" fill="none" stroke-width="5"/>';
-      }
-    }
+                  function applyColorFilter(element, hex) {
+                                // CSS 필터를 사용하여 색상 조정
+                                const img = element.querySelector('img');
+                                if (img) {
+                                                  // 간단한 색상 변환을 위해 filter 속성 사용
+                                                  img.style.filter = 'brightness(0.9)';
+                                }
+                  }
 
-    function setBorder(option) {
-      const border = document.getElementById("border");
-      if(option === "border1") {
-        border.innerHTML = '<path d="M10,10 L790,10 L790,790 L10,790 Z" stroke="black" fill="none" stroke-width="10"/>';
-      } else {
-        border.innerHTML = '<circle cx="400" cy="400" r="390" stroke="black" fill="none" stroke-width="10"/>';
-      }
-    }
+                  function updateCaption() {
+                                const innerColor = document.getElementById('innerColorPicker').value;
+                                const borderColor = document.getElementById('borderColorPicker').value;
+                                const bgColor = document.getElementById('bgColorPicker').value;
 
-    function setInnerColor(hex) {
-      document.querySelectorAll("#inner-design *").forEach(el => el.setAttribute("stroke", hex));
-      updateCaption();
-    }
+                                document.getElementById('color-info').textContent = `Inner:${innerColor} | Border:${borderColor} | Background:${bgColor}`;
+                                document.getElementById('color-chip').style.background = innerColor;
+                  }
 
-    function setBorderColor(hex) {
-      document.querySelectorAll("#border *").forEach(el => el.setAttribute("stroke", hex));
-      updateCaption();
-    }
+                  function handleImageError(img, type) {
+                                console.error(`Failed to load ${type} image:`, img.src);
+                                // 이미지 로드 실패 시 대체 텍스트 표시
+                                img.style.display = 'none';
+                                img.parentElement.style.backgroundColor = '#f0f0f0';
+                                img.parentElement.innerHTML = `<p style="padding-top: 300px; color: red;">Failed to load ${type} image</p>`;
+                  }
 
-    function setBackground(hex) {
-      document.getElementById("canvasWrapper").style.backgroundColor = hex;
-      updateCaption();
-    }
+                  function saveImage() {
+                                alert('PNG 저장 기능은 canvas-based SVG 렌더링이 필요합니다.\n현재 버전에서는 브라우저의 스크린샷 기능을 사용해주세요.');
+                  }
 
-    function updateCaption() {
-      const innerColor = document.querySelector("#inner-design *")?.getAttribute("stroke") || "#000000";
-      const borderColor = document.querySelector("#border *")?.getAttribute("stroke") || "#000000";
-      const bgColor = document.getElementById("canvasWrapper").style.backgroundColor;
-      document.getElementById("color-info").textContent = `Inner:${innerColor} | Border:${borderColor} | Background:${bgColor}`;
-      document.getElementById("color-chip").style.background = innerColor;
-    }
-
-    function saveImage() {
-      const canvas = document.createElement("canvas");
-      canvas.width = 800;
-      canvas.height = 950;
-      const ctx = canvas.getContext("2d");
-
-      ctx.fillStyle = document.getElementById("canvasWrapper").style.backgroundColor;
-      ctx.fillRect(0,0,800,950);
-
-      ctx.fillStyle = "black";
-      ctx.font = "16px Arial";
-      ctx.fillText("SVG 저장은 canvg 같은 라이브러리 필요", 20, 920);
-
-      const pngFile = canvas.toDataURL("image/png");
-      const downloadLink = document.createElement("a");
-      downloadLink.download = "bandana.png";
-      downloadLink.href = pngFile;
-      downloadLink.click();
-    }
-  </script>
-</body>
-</html>
+                  // 페이지 로드 시 기본값 설정
+                  window.addEventListener('DOMContentLoaded', function() {
+                                updateCaption();
+                  });
+        </script>
+  </body>
+</html>html>
+        </script>
+        </div>
+      </div></h1>
+  </body>
+      </style></title>
+  </head>
