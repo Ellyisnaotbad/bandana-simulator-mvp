@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+h<!DOCTYPE html>
 <html lang="ko">
   <head>
         <meta charset="UTF-8">
@@ -53,27 +53,27 @@
         <h1>Bandana Simulator</h1>
       
       <!-- 내부 디자인 선택 -->
-      <button onclick="setInner('inner1')">내부 디자인 1</button>button>
-      <button onclick="setInner('inner2')">내부 디자인 2</button>button>
+      <button onclick="setInner('inner1')">내부 디자인 1</button>
+      <button onclick="setInner('inner2')">내부 디자인 2</button>
       
       <!-- 테두리 선택 -->
       <div>
-                <button onclick="setBorder('border1')">테두리 1</button>button>
-                <button onclick="setBorder('border2')">테두리 2</button>button>
-                <button onclick="setBorder('border3')">테두리 3</button>button>
-                <button onclick="setBorder('border4')">테두리 4</button>button>
-                <button onclick="setBorder('border5')">테두리 5</button>button>
-                <button onclick="setBorder('border6')">테두리 6</button>button>
-                <button onclick="setBorder('border7')">테두리 7</button>button>
+                <button onclick="setBorder('border1')">테두리 1</button>
+                <button onclick="setBorder('border2')">테두리 2</button>
+                <button onclick="setBorder('border3')">테두리 3</button>
+                <button onclick="setBorder('border4')">테두리 4</button>
+                <button onclick="setBorder('border5')">테두리 5</button>
+                <button onclick="setBorder('border6')">테두리 6</button>
+                <button onclick="setBorder('border7')">테두리 7</button>
       </div>
 
         <!-- 색상 컬러피커 버튼 -->
         <div>
-                  <button onclick="document.getElementById('innerColorPicker').click()">Inner 색상</button>button>
+                  <button onclick="document.getElementById('innerColorPicker').click()">Inner 색상</button>
                   <input type="color" id="innerColorPicker" value="#000000" style="display:none;" onchange="setInnerColor(this.value)">
-                  <button onclick="document.getElementById('borderColorPicker').click()">Border 색상</button>button>
+                  <button onclick="document.getElementById('borderColorPicker').click()">Border 색상</button>
                   <input type="color" id="borderColorPicker" value="#000000" style="display:none;" onchange="setBorderColor(this.value)">
-                  <button onclick="document.getElementById('bgColorPicker').click()">배경 색상</button>button>
+                  <button onclick="document.getElementById('bgColorPicker').click()">배경 색상</button>
                   <input type="color" id="bgColorPicker" value="#FFFFFF" style="display:none;" onchange="setBackground(this.value)">
         </div>
 
@@ -96,7 +96,7 @@
         </div>
 
         <!-- PNG 저장 버튼 -->
-        <button id="saveBtn" onclick="saveImage()">PNG 저장</button>button>
+        <button id="saveBtn" onclick="saveImage()">PNG 저장</button>
 
         <script>
                   let currentBorder = 'border1';
